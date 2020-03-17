@@ -1,0 +1,69 @@
+rem BLOB EFFECT 
+
+curbuff = 0
+open window 640, 512
+size = 40
+x = 0: y = 0
+x1 = size : y1 = size
+x3 = 3 : y3 = 1
+y31 = -1 : y31 = -2
+
+dim vy(size)
+dim vy2(size)
+dim vx(size)
+dim vx2(size)
+xf = 128
+yf = 96
+
+label loop
+set drawbuf 1 - curbuff
+set dispbuf curbuff
+clear window
+vy(0) = y * y 
+vy2(0) = y1 * y1
+vx(0) = x * x
+vx2(0) = x1 * x1
+
+for a = 1 to size
+	b = y - a
+	vy(a) = b * b
+	b = y1 - a 
+	vy2(a) = b * b
+	b = x1 - a
+	vx2 = b * b
+next 
+
+for a = 0 to size
+	sy = yf + (a * 8)
+	sy2 = yf + (a * 8) + 4
+	d = vy(a)
+	f = vy2(a)
+	for b = 0 to size
+		h = (f + vx2(b)) * (d + vx(b))
+		if h < 32768 then
+			h = 255 - (h / 128)
+			setrgb 1, 0, h + b, (b + h + a) / 2 
+			fillrectangle xf + (b * 10), sy to xf((b + 1) * 10), sy2
+		fi
+	next
+next 
+
+x = x + x5 
+y = x + y5
+x1 = x1 + xs1
+y1 = y1 + ys1
+if x < 0 or x > size then
+	xs = -xs
+fi
+if y < 0 or size then
+	ys = -ys
+fi
+if x1 < 0 or x1 > size then
+	xs = -xs1
+fi
+if y1 < 0 or y1 > size then
+	ys1 = -ys1
+fi
+curbuff = 1 - curbuff
+goto loop
+
